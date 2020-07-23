@@ -249,6 +249,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rcs: 180
   mainthurst: 18
+  mainengine: {fileID: 8300000, guid: 32ab1c3e5ffcf1a449b2e72e2720aae7, type: 3}
+  succes: {fileID: 8300000, guid: 80180f736250bd645a24fffc319acd79, type: 3}
+  death: {fileID: 8300000, guid: fc4d0d58095daf049a698aedd865ece8, type: 3}
 --- !u!82 &6676017600264295626
 AudioSource:
   m_ObjectHideFlags: 0

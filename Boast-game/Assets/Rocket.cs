@@ -1,14 +1,22 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using UnityEngine.SceneManagement;
 using UnityEngine;
 
 public class Rocket : MonoBehaviour
 {
     [SerializeField] float rcs=100f;
     [SerializeField] float mainthurst = 100f;
+    [SerializeField] AudioClip mainengine;
+    [SerializeField] AudioClip succes;
+    [SerializeField] AudioClip death;
     Rigidbody mybody;
     AudioSource audiosource;
+    enum State
+    {
+        Alive,
+        Dead,
+        trans
+    }
+    State state = State.Alive;
     // Start is called before the first frame update
     void Start()
     {
@@ -20,8 +28,12 @@ public class Rocket : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Thurst();
-        Rotate();
+        if(state==State.Alive)
+        {
+            Thurst();
+            Rotate();
+        }
+     
     }
 
     void Thurst()
@@ -31,8 +43,8 @@ public class Rocket : MonoBehaviour
             mybody.AddRelativeForce(Vector3.up*mainthurst);
             if (!audiosource.isPlaying)
             {
-                audiosource.Play();
-            }
+                audiosource.PlayOneShot(mainengine);
+             }
         }
         else
         {
@@ -60,20 +72,52 @@ public class Rocket : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
+        if (state != State.Alive)
+            return;
+
+
         switch(collision.gameObject.tag)
         {
             case "Friendly":
                 //do nothing
                 break;
-            case "Fuel":
-                //refuel
+            case "Finish":
+                Startsuccessequence();
                 break;
             default:
-                //die
+                StartdeathSequence();
                 break;
 
         }
 
+    }
+
+    private void StartdeathSequence()
+    {
+       // state = State.Dead;
+      //  audiosource.Stop();
+       // audiosource.PlayOneShot(death);
+      //  Invoke("loadafterdead", 1f);
+        //die
+    }
+
+    private void Startsuccessequence()
+    {
+        state = State.trans;
+        audiosource.Stop();
+        audiosource.PlayOneShot(succes);
+        Invoke("Loadnxtlevel", 1f);
+ 
+    }
+
+   void loadafterdead()
+    {
+        // SceneManager.LoadScene(0);
+    }
+  void Loadnxtlevel()
+    {
+
+        SceneManager.LoadScene(1);
     }
 }
 
